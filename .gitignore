@@ -1,0 +1,12 @@
+# Eclipse
+/.project
+/.classpath
+/.settings
+/bin/
+
+# Maven
+/target
+
+/hs_err_*.log
+/dependency-reduced-pom.xml
+/.tern-project

@@ -1,0 +1,64 @@
+{
+	"title": "Hello Message Resource",
+	"$schema": "http://json-schema.org/draft-04/hyper-schema#",
+	"definitions": {
+		"hello": {
+			"id": "#hello",
+			"type": "object",
+			"properties": {
+				"msg": {
+					"type": "string"
+				},
+				"lang": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"links": [
+		{
+			"rel": "instances",
+			"method": "GET",
+			"href": "/api/v1/hello",
+			"targetSchema": {
+				"type": "array",
+				"items": {
+					"$ref": "#hello"
+				}
+			}
+		},
+		{
+			"rel": "self",
+			"method": "GET",
+			"href": "/api/v1/hello/{lang}",
+			"targetSchema": {
+				"$ref": "#hello"
+			}
+		},
+		{
+			"rel": "create",
+			"method": "POST",
+			"href": "/api/v1/hello",
+			"schema": {
+				"type": "object",
+				"properties": {
+					"msg": {
+						"type": "string"
+					},
+					"lang": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"msg",
+					"lang"
+				]
+			}
+		},
+		{
+			"rel": "delete_hello",
+			"method": "DELETE",
+			"href": "/api/v1/hello/{lang}"
+		}
+	]
+}
