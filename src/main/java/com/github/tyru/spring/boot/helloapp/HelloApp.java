@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,20 +15,23 @@ import me.tyru.json.hyper.schema.HyperSchemaBuilder;
 @SpringBootApplication
 public class HelloApp {
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(HelloApp.class, args);
-    }
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(HelloApp.class, args);
+	}
 
-    @Bean
-    @Qualifier("RawHyperSchema")
+	private static final String JSON_HYPER_SCHEMA_FILE = "/schemas/hello-schema.json";
+
+	@Bean
+	@Qualifier("RawHyperSchema")
 	public String getRawHyperSchema() throws IOException {
-    	try (InputStream inputStream = getClass().getResourceAsStream("/schemas/hello-schema.json")) {
+		try (InputStream inputStream = getClass().getResourceAsStream(JSON_HYPER_SCHEMA_FILE)) {
 			return IOUtils.toString(inputStream);
 		}
 	}
 
-    @Bean
-	public HyperSchema getHyperSchema(@Autowired @Qualifier("RawHyperSchema") String rawHyperSchema) throws IOException {
-    	return HyperSchemaBuilder.hyperSchema(new JSONObject(rawHyperSchema)).build();
+	@Bean
+	@Qualifier("AbstractSpringJSONValidationFilter.hyperSchema")
+	public HyperSchema injectHyperSchema() throws IOException {
+		return HyperSchemaBuilder.createHyperSchema(JSON_HYPER_SCHEMA_FILE);
 	}
 }
