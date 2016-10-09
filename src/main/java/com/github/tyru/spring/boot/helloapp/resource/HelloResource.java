@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,17 +34,17 @@ public class HelloResource {
 	@Qualifier("RawHyperSchema")
 	private String rawHyperSchema;
 
-	@RequestMapping(method = RequestMethod.GET, value = "schema")
+	@GetMapping("schema")
 	public String getRawHyperSchema() {
 		return rawHyperSchema;
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public List<HelloEntity> sayHelloInManyWays() {
 		return service.getHelloMsgList();
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "{lang}")
+	@GetMapping(value = "{lang}")
 	public ResponseEntity<HelloEntity> sayHelloIn(@PathVariable String lang) {
 		try {
 			return new ResponseEntity<HelloEntity>(service.getHelloMsg(lang), HttpStatus.OK);
@@ -52,7 +54,7 @@ public class HelloResource {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	public ResponseEntity<HelloEntity> addMsg(@RequestBody HelloEntity hello) {
 		try {
 			service.addMsg(hello);
@@ -63,7 +65,7 @@ public class HelloResource {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "{lang}")
+	@DeleteMapping("{lang}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteMsg(@PathVariable String lang) {
 		service.deleteMsg(lang);
