@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.handler.MappedInterceptor;
 
 import me.tyru.json.hyper.schema.HyperSchema;
 import me.tyru.json.hyper.schema.HyperSchemaBuilder;
@@ -34,9 +33,4 @@ public class HelloApp {
 	public HyperSchema getHyperSchema(@Autowired @Qualifier("RawHyperSchema") String rawHyperSchema) throws IOException {
     	return HyperSchemaBuilder.hyperSchema(new JSONObject(rawHyperSchema)).build();
 	}
-
-    @Bean
-    public MappedInterceptor interceptor(@Autowired ValidateJSONInterceptor interceptor) {
-        return new MappedInterceptor(new String[]{"/**"}, interceptor);
-    }
 }
