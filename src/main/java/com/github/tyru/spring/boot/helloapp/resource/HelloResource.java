@@ -23,7 +23,7 @@ import com.github.tyru.spring.boot.helloapp.exception.HelloServiceExcepton;
 
 @RestController
 // @LoggingAround
-@RequestMapping(value = "hello", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/api/v1/hello", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Scope("prototype")
 public class HelloResource {
 	private static final Logger logger = LoggerFactory.getLogger(HelloResource.class);
