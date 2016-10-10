@@ -2,6 +2,8 @@ package com.github.tyru.spring.boot.helloapp.resource;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.tyru.spring.boot.helloapp.exception.HelloServiceExcepton;
+import com.github.tyru.spring.boot.helloapp.resource.utils.ResponseUtils;
 
 @RestController
 // @LoggingAround
@@ -55,10 +58,11 @@ public class HelloResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<HelloEntity> addMsg(@RequestBody HelloEntity hello) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<HelloEntity> addMsg(@RequestBody HelloEntity hello, HttpServletRequest request) {
 		try {
 			service.addMsg(hello);
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			return ResponseUtils.created(request, hello.getLang());
 		} catch (HelloServiceExcepton e) {
 			logger.error(e.toString());
 			return e.getStatus();

@@ -2,15 +2,13 @@ package com.github.tyru.spring.boot.helloapp.resource;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.NoResultException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.tyru.spring.boot.helloapp.exception.HelloServiceExcepton;
 
@@ -25,23 +23,23 @@ public class HelloService {
 	}
 
 	public HelloEntity getHelloMsg(String lang) throws HelloServiceExcepton {
-		try {
-			return repository.findByLang(lang);
-		} catch (NoResultException e) {
-			logger.error(e.toString());
-			throw new HelloServiceExcepton(e, new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		final HelloEntity result = repository.findByLang(lang);
+		if (result == null) {
+			logger.info("Not found with " + lang);
+			throw new HelloServiceExcepton(null, new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		}
+		return result;
 	}
 
+	@Transactional
 	public void addMsg(HelloEntity hello) throws HelloServiceExcepton {
-		try {
-			repository.save(hello);
-		} catch (EntityExistsException e) {
-			logger.error(e.toString());
-			throw new HelloServiceExcepton(e, new ResponseEntity<>(HttpStatus.CONFLICT));
+		if (repository.exists(hello.getLang())) {
+			throw new HelloServiceExcepton(null, new ResponseEntity<>(HttpStatus.CONFLICT));
 		}
+		repository.save(hello);
 	}
 
+	@Transactional
 	public void deleteMsg(String lang) {
 		repository.deleteByLang(lang);
 	}
