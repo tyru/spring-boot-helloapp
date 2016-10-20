@@ -44,10 +44,24 @@
 			<version>1.16.10</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- XXX: This fixes NoClassDefFoundError at runtime for org.json exception class
+			org.json classes are required by:
+				spring-boot-helloapp (This project) -> json-hyper-schema -> org.everit.json.schema -> org.json
+			Spring boot shaded all classes including org.json into one jar,
+			so org.json's jar exists in 'BOOT-INF/lib/'.
+			I don't know why a lookup fails...
+			I confirmed that it is 'compile' scope not 'provided' by executing 'mvn dependency:tree'.
+		-->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>jaxrshelloapp</finalName>
+		<finalName>spring-boot-helloapp</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
